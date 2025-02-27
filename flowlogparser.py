@@ -1,5 +1,6 @@
 import csv
 from collections import defaultdict
+import os
 
 class FlowLogParser:
     def __init__(self, lookup_table_path: str, protocol_translator_table_path: str):
@@ -35,6 +36,7 @@ class FlowLogParser:
             Args:
                 output_dir_path (str): The directory path to where you want to store the output files in. Defaults to ./Output
         """
+        self._create_directory_recursive(output_dir_path)
         self._create_combination_counts_output(output_dir_path)
         self._create_tag_counts_output(output_dir_path)
 
@@ -76,3 +78,17 @@ class FlowLogParser:
             csvwriter = csv.writer(tag_count_file)
             csvwriter.writerow(header)
             csvwriter.writerows(data)
+
+
+    def _create_directory_recursive(self, path):
+        """
+        Recursively creates a directory and any missing parent directories.
+
+        Args:
+            path: The path of the directory to create.
+        """
+        try:
+            os.makedirs(path, exist_ok=True)
+            print(f"Successfully created directory: {path}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
